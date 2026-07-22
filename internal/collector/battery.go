@@ -1,18 +1,24 @@
 package collector
 
+type ChargingStatus string
+
 const (
-	CHARGER_NOT_CONNECTED = 1
-	CHARGER_CONNECTED     = 2
+	StatusDischarging          ChargingStatus = "discharging"
+	StatusCharging             ChargingStatus = "charging"
+	StatusFullyCharged         ChargingStatus = "fullyCharged"
+	StatusPluggedInNotCharging ChargingStatus = "pluggedInNotCharging"
 )
 
 type BatteryStats struct {
-	LevelPercent      float64
-	TimeToDischargeMs float64
-	HealthPercent     float64
-	AmperageMilliamps int
-	Voltage           float64
-	TemperatureDegC   float64
-	ChargingStatus    int
+	LevelPercent           float64
+	ChargingStatus         ChargingStatus
+	TimeToDischargeMinutes float64
+	TimeToFullMinutes      float64
+	CycleCount             int
+	HealthPercent          float64
+	AmperageMilliamps      int
+	Voltage                float64
+	TemperatureDegC        float64
 }
 
 type ProcessBatteryStats struct {
