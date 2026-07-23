@@ -6,10 +6,4 @@ type CPUStats struct {
 	SystemUsagePercent float64
 	UserUsagePercent   float64
 	IdleUsagePercent   float64
-	TopProcesses       []ProcessCPUStats
-}
-
-type ProcessCPUStats struct {
-	ProcessName  string
-	UsagePercent float64
 }

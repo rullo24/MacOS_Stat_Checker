@@ -7,7 +7,6 @@ type ChargingStatus string
 const (
 	StatusDischarging          ChargingStatus = "discharging"
 	StatusCharging             ChargingStatus = "charging"
-	StatusFullyCharged         ChargingStatus = "fullyCharged"
 	StatusPluggedInNotCharging ChargingStatus = "pluggedInNotCharging"
 )
 
@@ -20,12 +19,6 @@ type BatteryStats struct {
 	AmperageMilliamps      int
 	VoltageMillivolts      int
 	TemperatureDegC        float64
-	TopProcesses           []ProcessBatteryStats
-}
-
-type ProcessBatteryStats struct {
-	Name         string
-	UsagePercent float64
 }
 
 // @brief 	captures the relevant battery stats using Golang (calls into C funcs)
@@ -38,6 +31,25 @@ func CollectBattery() (BatteryStats, error) {
 	}
 
 	// perform calcs on battery_raw values
+	var l_charging_status ChargingStatus
+	switch {
+	case battery_raw.IsCharging:
+		l_charging_status = StatusCharging
+	case battery_raw.IsPluggedIn:
+		l_charging_status = StatusPluggedInNotCharging
+	case !battery_raw.IsCharging:
+		l_charging_status = StatusDischarging
+	default:
+	}
 
-	return BatteryStats{}, nil // TBC
+	return BatteryStats{
+		LevelPercent:           (float64(battery_raw.CurrentCapacity) / float64(battery_raw.MaxCapacity)) * 100.0,
+		CycleCount:             battery_raw.CycleCount,
+		ChargingStatus:         l_charging_status,
+		TimeToDischargeMinutes: float64(battery_raw.TimeRemaining),
+		AvgTimeToFullMinutes:   float64(battery_raw.AvgTimeToFull),
+		AmperageMilliamps:      int(battery_raw.AmperageMilliamps),
+		VoltageMillivolts:      battery_raw.VoltageMillivolts,
+		TemperatureDegC:        float64(battery_raw.TemperatureCentiC) / 100,
+	}, nil // TBC
 }

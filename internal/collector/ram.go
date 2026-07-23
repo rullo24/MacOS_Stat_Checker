@@ -5,10 +5,4 @@ type RamStats struct {
 	WiredMemoryInUseMb      int
 	CompressedMemoryInUseMb int
 	FreeMemoryMb            int
-	TopProcesses            []ProcessRamStats
-}
-
-type ProcessRamStats struct {
-	Name         string
-	UsagePercent float64
 }

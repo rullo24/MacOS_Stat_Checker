@@ -16,8 +16,8 @@ type BatteryRaw struct {
 	CycleCount        int
 	TimeRemaining     int
 	AvgTimeToFull     int
-	AmperageMA        int32
-	VoltageMV         int
+	AmperageMilliamps int32
+	VoltageMillivolts int
 	TemperatureCentiC int
 	IsCharging        bool
 	IsPluggedIn       bool
@@ -40,8 +40,8 @@ func CollectBatteryRaw() (BatteryRaw, error) {
 		CycleCount:        int(raw.cycle_count),
 		TimeRemaining:     int(raw.time_remaining),
 		AvgTimeToFull:     int(raw.avg_time_to_full),
-		AmperageMA:        int32(raw.amperage_ma),
-		VoltageMV:         int(raw.voltage_mv),
+		AmperageMilliamps: int32(raw.amperage_ma),
+		VoltageMillivolts: int(raw.voltage_mv),
 		TemperatureCentiC: int(raw.temperature_centic),
 		IsCharging:        raw.is_charging != 0,
 		IsPluggedIn:       raw.is_plugged_in != 0,
