@@ -1,15 +1,12 @@
 package capture
 
-// C includes and defs
 /*
 #cgo LDFLAGS: -framework IOKit -framework CoreFoundation
 #include "battery_darwin.h"
 */
+import "C" // must IMMEDIATELY be imported after C includes comment
 
-import (
-	"C"
-	"errors"
-)
+import "errors"
 
 type BatteryRaw struct {
 	CurrentCapacity   int

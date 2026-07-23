@@ -1,4 +1,4 @@
-# pcstater
+# MacOS_Stat_Checker
 
 A native macOS menu bar performance monitor (CPU, memory, thermals, disk/network I/O).
 
@@ -7,6 +7,8 @@ A native macOS menu bar performance monitor (CPU, memory, thermals, disk/network
 - **UI**: SwiftUI (`MenuBarExtra`) — status item + popover, no AppKit/WebKit.
 - **Logic**: Go — sampling loop, delta calculations, state management.
 - **Metrics**: Go via cgo, calling Mach kernel APIs directly (`host_processor_info`, `host_statistics64`, etc.) instead of shelling out to `top`/`ps`.
+
+**NOTE:** CGO_ENABLED must be 1 for this project to build
 
 ```
 SwiftUI App (Xcode)
