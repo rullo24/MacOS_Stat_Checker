@@ -5,9 +5,9 @@ import "MacOS_Stat_Checker/internal/capture"
 type ChargingStatus string
 
 const (
-	StatusDischarging          ChargingStatus = "discharging"
-	StatusCharging             ChargingStatus = "charging"
-	StatusPluggedInNotCharging ChargingStatus = "pluggedInNotCharging"
+	BatteryStatusDischarging          ChargingStatus = "discharging"
+	BatteryStatusCharging             ChargingStatus = "charging"
+	BatteryStatusPluggedInNotCharging ChargingStatus = "pluggedInNotCharging"
 )
 
 type BatteryStats struct {
@@ -23,7 +23,7 @@ type BatteryStats struct {
 
 // @brief 	captures the relevant battery stats using Golang (calls into C funcs)
 // @return	sends back the Golang-native BatteryStats and an error (if failed)
-func CollectBattery() (BatteryStats, error) {
+func CollectBatteryStats() (BatteryStats, error) {
 
 	battery_raw, err := capture.CollectBatteryRaw()
 	if err != nil {
@@ -34,11 +34,11 @@ func CollectBattery() (BatteryStats, error) {
 	var l_charging_status ChargingStatus
 	switch {
 	case battery_raw.IsCharging:
-		l_charging_status = StatusCharging
+		l_charging_status = BatteryStatusCharging
 	case battery_raw.IsPluggedIn:
-		l_charging_status = StatusPluggedInNotCharging
+		l_charging_status = BatteryStatusPluggedInNotCharging
 	case !battery_raw.IsCharging:
-		l_charging_status = StatusDischarging
+		l_charging_status = BatteryStatusDischarging
 	default:
 	}
 
