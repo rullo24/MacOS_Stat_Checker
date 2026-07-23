@@ -1,6 +1,9 @@
 package collector
 
-import "MacOS_Stat_Checker/internal/capture"
+import (
+	"MacOS_Stat_Checker/internal/capture"
+	"math"
+)
 
 type ChargingStatus string
 
@@ -14,9 +17,9 @@ type BatteryStats struct {
 	LevelPercent           float64
 	CycleCount             int
 	ChargingStatus         ChargingStatus
-	TimeToDischargeMinutes float64
-	AvgTimeToFullMinutes   float64
-	AmperageMilliamps      int
+	TimeToDischargeMinutes int
+	AvgTimeToFullMinutes   int
+	AmperageMilliamps      int32
 	VoltageMillivolts      int
 	TemperatureDegC        float64
 }
@@ -39,17 +42,26 @@ func CollectBatteryStats() (BatteryStats, error) {
 		l_charging_status = BatteryStatusPluggedInNotCharging
 	case !battery_raw.IsCharging:
 		l_charging_status = BatteryStatusDischarging
-	default:
+	}
+
+	// terniary ops
+	var l_time_to_discharge int = battery_raw.TimeRemaining
+	var l_avg_time_to_full int = battery_raw.AvgTimeToFull
+	if l_time_to_discharge == math.MaxUint16 {
+		l_time_to_discharge = 0 // sentinel N/A
+	}
+	if l_avg_time_to_full == math.MaxUint16 {
+		l_avg_time_to_full = 0 // sentinel N/A
 	}
 
 	return BatteryStats{
 		LevelPercent:           (float64(battery_raw.CurrentCapacity) / float64(battery_raw.MaxCapacity)) * 100.0,
 		CycleCount:             battery_raw.CycleCount,
 		ChargingStatus:         l_charging_status,
-		TimeToDischargeMinutes: float64(battery_raw.TimeRemaining),
-		AvgTimeToFullMinutes:   float64(battery_raw.AvgTimeToFull),
-		AmperageMilliamps:      int(battery_raw.AmperageMilliamps),
+		TimeToDischargeMinutes: l_time_to_discharge,
+		AvgTimeToFullMinutes:   l_avg_time_to_full,
+		AmperageMilliamps:      battery_raw.AmperageMilliamps,
 		VoltageMillivolts:      battery_raw.VoltageMillivolts,
 		TemperatureDegC:        float64(battery_raw.TemperatureCentiC) / 100,
-	}, nil // TBC
+	}, nil
 }
