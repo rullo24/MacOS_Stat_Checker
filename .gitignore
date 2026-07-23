@@ -1,0 +1,39 @@
+**/.claude/
+
+# macOS
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+
+# Go build artifacts
+/bin/
+/dist/
+*.test
+*.out
+
+# cgo / C build artifacts (object files, static/dynamic libs, generated
+# c-archive headers — not the .h files you write by hand)
+*.o
+*.a
+*.dylib
+*.so
+
+# Xcode / SwiftUI
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.build/
+build/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Env / local secrets
+.env
+.env.local
