@@ -29,5 +29,44 @@ int collect_cpu_static_raw(cpu_static_raw_t *p_out) {
 // @brief   Captures current CPU tick counts
 // @return  0 on success; -1 on failure
 int collect_cpu_dynamic_raw(cpu_dynamic_raw_t *p_out) {
+    natural_t core_count = 0;
+    processor_info_array_t info_array;
+    mach_msg_type_number_t info_count;
 
+    // capture CPU tick info
+    kern_return_t kr = host_processor_info(
+        mach_host_self(),
+        PROCESSOR_CPU_LOAD_INFO,
+        &core_count,
+        &info_array,
+        &info_count
+    );
+
+    // capture CPU tick info success check
+    if (kr != KERN_SUCCESS) {
+        return -1;
+    }
+
+    // clamp - shouldn't happen on real hardware
+    if (core_count > CPU_RAW_MAX_CORES) {
+        core_count = CPU_RAW_MAX_CORES;
+    }
+
+    // cycle over each core in CPU
+    processor_cpu_load_info_t cpu_load = (processor_cpu_load_info_t)info_array;
+    for (natural_t i = 0; i < core_count; i++) {
+        p_out->user_ticks[i]    = cpu_load[i].cpu_ticks[CPU_STATE_USER];
+        p_out->system_ticks[i]  = cpu_load[i].cpu_ticks[CPU_STATE_SYSTEM];
+        p_out->idle_ticks[i]    = cpu_load[i].cpu_ticks[CPU_STATE_IDLE];
+        p_out->nice_ticks[i]    = cpu_load[i].cpu_ticks[CPU_STATE_NICE];
+    }
+
+    // release call for info_array
+    vm_deallocate(
+        mach_task_self(),
+        (vm_address_t)info_array,
+        info_count * sizeof(*info_array)
+    );
+
+    return 0;
 }
