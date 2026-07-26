@@ -18,3 +18,6 @@ typedef struct {
     uint64_t idle_ticks[CPU_RAW_MAX_CORES];     // idle_ticks for each CPU core
     uint64_t nice_ticks[CPU_RAW_MAX_CORES];     // nice_ticks for each CPU core
 } cpu_dynamic_raw_t;
+
+int collect_cpu_static_raw(cpu_static_raw_t *p_out);
+int collect_cpu_dynamic_raw(cpu_dynamic_raw_t *p_out);
