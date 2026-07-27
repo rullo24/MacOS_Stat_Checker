@@ -8,16 +8,16 @@ import "C"
 import "errors"
 
 type CpuStaticRaw struct {
-	name                string
-	perfCoreCount       int
-	efficiencyCoreCount int
+	Name                string
+	PerfCoreCount       int
+	EfficiencyCoreCount int
 }
 
 type CpuDynRaw struct {
-	userTicks   []uint64
-	systemTicks []uint64
-	idleTicks   []uint64
-	niceTicks   []uint64
+	UserTicks   []uint64
+	SystemTicks []uint64
+	IdleTicks   []uint64
+	NiceTicks   []uint64
 }
 
 func CollectCpuStaticRaw() (CpuStaticRaw, error) {
@@ -27,9 +27,9 @@ func CollectCpuStaticRaw() (CpuStaticRaw, error) {
 	}
 
 	return CpuStaticRaw{
-		name:                C.GoString(&raw_static.name[0]),
-		perfCoreCount:       int(raw_static.perf_core_count),
-		efficiencyCoreCount: int(raw_static.efficiency_core_count),
+		Name:                C.GoString(&raw_static.name[0]),
+		PerfCoreCount:       int(raw_static.perf_core_count),
+		EfficiencyCoreCount: int(raw_static.efficiency_core_count),
 	}, nil
 
 }
@@ -55,10 +55,10 @@ func CollectCpuDynamicRaw(coreCount int) (CpuDynRaw, error) {
 	}
 
 	return CpuDynRaw{
-		userTicks:   l_userTicks,
-		systemTicks: l_systemTicks,
-		idleTicks:   l_idleTicks,
-		niceTicks:   l_niceTicks,
+		UserTicks:   l_userTicks,
+		SystemTicks: l_systemTicks,
+		IdleTicks:   l_idleTicks,
+		NiceTicks:   l_niceTicks,
 	}, nil
 
 }

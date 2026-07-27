@@ -9,10 +9,10 @@ type CpuStaticStats struct {
 }
 
 type CpuDynamicStats struct {
-	SystemUsagePercent []float64
-	UserUsagePercent   []float64
-	IdleUsagePercent   []float64
-	NiceUsagePercent   []float64
+	UserTicks   []uint64
+	SystemTicks []uint64
+	IdleTicks   []uint64
+	NiceTicks   []uint64
 }
 
 func CollectCpuStaticStats() (CpuStaticStats, error) {
@@ -22,9 +22,9 @@ func CollectCpuStaticStats() (CpuStaticStats, error) {
 	}
 
 	return CpuStaticStats{
-		Name:                cpuStaticRaw.name,
-		NumPerformanceCores: cpuStaticRaw.perfCoreCount,
-		NumEfficiencyCores:  cpuStaticRaw.efficiencyCoreCount,
+		Name:                cpuStaticRaw.Name,
+		NumPerformanceCores: cpuStaticRaw.PerfCoreCount,
+		NumEfficiencyCores:  cpuStaticRaw.EfficiencyCoreCount,
 	}, nil
 }
 
@@ -34,5 +34,10 @@ func CollectCpuDynamicStats(coreCount int) (CpuDynamicStats, error) {
 		return CpuDynamicStats{}, err
 	}
 
-	return
+	return CpuDynamicStats{
+		UserTicks:   cpuDynamicRaw.UserTicks,
+		SystemTicks: cpuDynamicRaw.SystemTicks,
+		IdleTicks:   cpuDynamicRaw.IdleTicks,
+		NiceTicks:   cpuDynamicRaw.NiceTicks,
+	}, nil
 }
